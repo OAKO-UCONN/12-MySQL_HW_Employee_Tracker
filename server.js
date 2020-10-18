@@ -1,69 +1,174 @@
-const connection = require("./connection");
+const { prompt } = require("inquirer");
+const db = require("./db");
+require("console.table");
 
-class DB {
-  // Keeping a reference to the connection on the class in case we need it later
-  constructor(connection) {
-    this.connection = connection;
+//Run the program
+
+//Main Prompts Function
+loadMainPrompts();
+async function loadMainPrompts() {
+  const { choice } = await prompt([
+    {
+      type: "list",
+      name: "choice",
+      message: "What would you like to do?",
+      choices: [
+        {
+          name: "View All Employees",
+          value: "VIEW_EMPLOYEES",
+        },
+        {
+          name: "View Employees by Department",
+          value: "VIEW_EMPLOYEES_BY_DEPARTMENT",
+        },
+        {
+          name: "Create a New Employee",
+          value: "CREATE_NEW_EMPLOYEE",
+        },
+        {
+          name: "Remove Employee With a Given ID",
+          value: "REMOVE_EMPLOYEE_ID",
+        },
+        {
+          name: "Update the given employee's role",
+          value: "NEW_EMPLOYEE_ROLE",
+        },
+        {
+          name: "Update the given employee's manager",
+          value: "UPDATE_EMPLOYEE_MANGER",
+        },
+        {
+          //   name: "View All Employees",
+          //   value: "VIEW_EMPLOYEES"
+          // },
+          // {
+          //   name: "View All Employees",
+          //   value: "VIEW_EMPLOYEES"
+        },
+        {
+          name: "Quit",
+          value: "QUIT",
+        },
+      ],
+    },
+  ]);
+  // Call the appropriate function depending on what the user chose
+  switch (choice) {
+    case "VIEW_EMPLOYEES":
+      return viewEmployees();
+    case "VIEW_EMPLOYEES_BY_DEPARTMENT":
+      return viewEmployeesByDepartment();
+    case "CREATE_NEW_EMPLOYEE":
+      return createNewEmployee(employee);
+    case "REMOVE_EMPLOYEE_ID":
+      return createNewEmployee();
+    case "NEW_EMPLOYEE_ROLE":
+      return createNewEmployee();
+    case "UPDATE_EMPLOYEE_MANGER":
+      return createNewEmployee();
+    //..other functions
+    //..
+    //..
+    //..
+    default:
+      return quit();
   }
+}
+//View All Employees Function
+async function viewEmployees() {
+  const employees = await db.findAllEmployees();
+  console.log("\n");
+  console.table(employees);
+  loadMainPrompts();
+}
+//Create New Employee Function
 
-  // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
-  findAllEmployees() {
-    return this.connection.query(
-      "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
-    );
-  }
+async function loadMainPrompts() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "choice",
+        message: "Select using the arrow keys and press ENTER to select.",
+        choices: [
+          {
+            name: "View all Employees",
+            value: "SELECT_ALL_EMPLOYEES"
+          },
+          {
+            name: "View all Employees by Department",
+            value: "SELECT_ALL_EMPLOYEES_BY_DEPARTMENT"
+          },
+          {
+            name: "View all Employees by Manager",
+            value: "SELECT_ALL_EMPLOYEES_BY_MANAGER"
+          },
+          {
+            name: "View All Employess by Role",
+            value: "SELECT_ALL_EMPLOYEES_BY_ROLE"
+          },
+          {
+            name: "Add Employee",
+            value: "INSERT_EMPLOYEE"
+          },
+          {
+            name: "Remove Employee",
+            value: "DELETE_EMPLOYEE"
+          },
+          {
+            name: "Quit",
+            value: "QUIT"
+          }
+        ]
+      }
+    ])
+    .then(answers => {
+      switch (answers.choice) {
+        case "SELECT_ALL_EMPLOYEES":
+          return viewEmployees();
 
-  // Find all employees except the given employee id
-  findAllPossibleManagers(employeeId) {
-    return this.connection.query(
-      "SELECT id, first_name, last_name FROM employee WHERE id != ?",
-      employeeId
-    );
-  }
+        case "SELECT_ALL_EMPLOYEES_BY_DEPARTMENT":
+          return viewEmployeesByDepartment();
 
-  // Create a new employee
+        case "SELECT_ALL_EMPLOYEES_BY_MANAGER":
+          return viewEmployeesByManager();
 
-  // Remove an employee with the given id
+        case "SELECT_ALL_EMPLOYEES_BY_ROLE":
+          return viewEmployeesByRole();
 
-  // Update the given employee's role
+        case "INSERT_EMPLOYEE":
+          return addNewEmployee();
 
-  // Update the given employee's manager
+        case "DELETE_EMPLOYEE":
+          return removeEmployee();
 
-  // Find all roles, join with departments to display the department name
-  findAllRoles() {
-    return this.connection.query(
-      "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
-    );
-  }
-
-  // Create a new role
-  createRole(role) {
-    return this.connection.query("INSERT INTO role SET ?", role);
-  }
-
-  // Remove a role from the db
-  removeRole(roleId) {
-    return this.connection.query("DELETE FROM role WHERE id = ?", roleId);
-  }
-
-  // Find all departments, join with employees and roles and sum up utilized department budget
-
-  // Create a new department
-  createDepartment(department) {
-    return this.connection.query("INSERT INTO department SET ?", department);
-  }
-
-  // Remove a department
-
-  // Find all employees in a given department, join with roles to display role titles
-  findAllEmployeesByDepartment(departmentId) {
-    return this.connection.query(
-      "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id = ?;",
-      departmentId
-    );
-  }
-
-  // Find all employees by manager, join with departments and roles to display titles and department names
+        case "QUIT":
+          return quit();
+      }
+    });
+}
+//View Employees By Department
+async function viewEmployeesByDepartment() {
+  const departments = await db.findAllDepartments();
+  const departmentChoices = departments.map(({ id, name }) => ({
+    name: name,
+    value: id,
+  }));
+  const { departmentId } = await prompt([
+    {
+      type: "list",
+      name: "departmentId",
+      message: "Which department would you like to see employees for?",
+      choices: departmentChoices,
+    },
+  ]);
+  const employees = await db.findAllEmployeesByDepartment(departmentId);
+  console.log("\n");
+  console.table(employees);
+  loadMainPrompts();
+}
+function quit() {
+  console.log("Goodbye!");
+  process.exit();
 }
 
-module.exports = new DB(connection);
