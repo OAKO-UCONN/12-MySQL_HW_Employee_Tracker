@@ -6,6 +6,30 @@ class DB {
     this.connection = connection;
   }
 
+// ########################################### CREATE #############################################################
+ 
+  // Create a new employee
+  createNewEmployee(employee) {
+    return this.connection.query(
+      "INSERT INTO employee SET ?" +employee
+    );
+  }
+ 
+  // Create a new department
+  createDepartment(department) {
+    return this.connection.query("INSERT INTO department SET ?", department);
+  }
+
+  // Create a new role
+  createRole(role) {
+    return this.connection.query("INSERT INTO role SET ?", role);
+  }
+
+
+//////////////////////////////////////////////////////////END CREATES/////////////////////////////////////////////////////////////
+
+//################################################# READ #################################################################
+
   // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
   findAllEmployees() {
     return this.connection.query(
@@ -18,39 +42,24 @@ class DB {
     //TODO: complete the function
   }
 
-  // Create a new employee
-
-  // Remove an employee with the given id
-
-  // Update the given employee's role
-
-  // Update the given employee's manager
-
-  // Find all roles, join with departments to display the department name
-  findAllRoles() {
+   // Find all departments, join with employees and roles and sum up utilized department budget
+   findAllDepartments() {
     return this.connection.query(
-      "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
+      "SELECT department.id, department.name, SUM(role.salary) AS utilized_budget FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name;"
     );
   }
 
-  // Create a new role
-  createRole(role) {
-    return this.connection.query("INSERT INTO role SET ?", role);
-  }
+    // Find all roles, join with departments to display the department name
+    findAllRoles() {
+      return this.connection.query(
+        "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
+      );
+    }
 
-  // Remove a role from the db
-  removeRole(roleId) {
-    return this.connection.query("DELETE FROM role WHERE id = ?", roleId);
-  }
+    // Find all departments, join with employees and roles and sum up utilized department budget
 
-  // Find all departments, join with employees and roles and sum up utilized department budget
 
-  // Create a new department
-  createDepartment(department) {
-    return this.connection.query("INSERT INTO department SET ?", department);
-  }
 
-  // Remove a department
 
   // Find all employees in a given department, join with roles to display role titles
   findAllEmployeesByDepartment(departmentId) {
@@ -61,6 +70,51 @@ class DB {
   }
 
   // Find all employees by manager, join with departments and roles to display titles and department names
+
+
+
+  
+
+////////////////////////////////////////////////////////////////////////////////////END READS//////////////////////////////////////////////////////////////////////////////
+
+//################################################################################## UPDATE ###############################################################################
+// Update the given employee's role
+updateEmployeeRole() {
+  return this.connection.query(
+    "UPDATE FROM employee employee.id employee.role"
+  );
+}
+
+// Update the given employee's manager
+updateEmployeesManager() {
+  return this.connection.query(
+    "UPDATE FROM employee employee.manager"
+  );
+}
+//////////////////////////////////////////////////////////////////////////////////////END UPDATES////////////////////////////////////////////////////////////////////////////////
+
+//###################################################################################### DELETE ##############################################################################
+
+  // Remove an employee with the given id
+  removeEmployeeById() {
+    return this.connection.query(
+      "DELETE FROM employee WHERE id = ?", employeeId
+    );
+  }
+
+  // Remove a department
+  deleteDepartment(department) {
+    return this.connection.query("REMOVE FROM department SET ?", department);
+  }
+
+  // Remove a role from the db
+  removeRole(roleId) {
+    return this.connection.query("DELETE FROM role WHERE id = ?", roleId);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////END DELETES//////////////////////////////////////////////////////////////////////////////
+
+ 
 }
 
 module.exports = new DB(connection);
