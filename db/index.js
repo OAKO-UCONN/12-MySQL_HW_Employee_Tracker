@@ -57,7 +57,11 @@ class DB {
     }
 
     // Find all departments, join with employees and roles and sum up utilized department budget
-
+    findAllDepartments() {
+      return this.connection.query(
+        "SELECT department.name, department.id FROM department LEFT JOIN role on role.department_id = department.id ;"
+      );
+    }
 
 
 
@@ -79,11 +83,20 @@ class DB {
 
 //################################################################################## UPDATE ###############################################################################
 // Update the given employee's role
+
+updateEmployeeRole() {
+  return this.connection.query(
+    "UPDATE employee SET role_id = ? WHERE id = ?", [roleId, employeeId]
+  );
+}
+
+/* old
 updateEmployeeRole() {
   return this.connection.query(
     "UPDATE FROM employee employee.id employee.role"
   );
 }
+*/
 
 // Update the given employee's manager
 updateEmployeesManager() {
@@ -104,7 +117,8 @@ updateEmployeesManager() {
 
   // Remove a department
   deleteDepartment(department) {
-    return this.connection.query("REMOVE FROM department SET ?", department);
+    //return this.connection.query("REMOVE FROM department SET ?", department);
+    return this.connection.query("DELETE FROM department WHERE id = ?", department);
   }
 
   // Remove a role from the db
