@@ -59,7 +59,7 @@ async function loadMainPrompts() {
     case "VIEW_EMPLOYEES_BY_DEPARTMENT":
       return viewEmployeesByDepartment();
     case "CREATE_NEW_EMPLOYEE":
-      return createNewEmployee();
+      return createNewEmployee(employee);
     case "REMOVE_EMPLOYEE_ID":
       return createNewEmployee();
     case "NEW_EMPLOYEE_ROLE":
@@ -117,3 +117,4 @@ function quit() {
   console.log("Goodbye!");
   process.exit();
 }
+
