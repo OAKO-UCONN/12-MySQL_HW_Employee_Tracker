@@ -63,8 +63,6 @@ class DB {
       );
     }
 
-
-
   // Find all employees in a given department, join with roles to display role titles
   findAllEmployeesByDepartment(departmentId) {
     return this.connection.query(
