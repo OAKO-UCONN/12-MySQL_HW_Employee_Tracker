@@ -3,7 +3,7 @@ const connection = require("./connection");//DB Connection Information
 const input = require("../user-interface");//Inquierer
 //END Dependencies
 
-//START EXPORTING so we can use these functions with Inquirer.
+//START EXPORTING so we can use these functions with Inquirer. \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 class Queries {
 
 //CRUD OPERATIONS |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -122,23 +122,52 @@ assignDeptIdToRole() {
     return `UPDATE role SET department_id = ? WHERE role.title = ?`;
 };
 
+// ^ // Update the Department Role when department removed.
+updateDeptRoleUnderRemovedDept() {
+    return `UPDATE role SET department_id = null WHERE role.id = ?`;
+};
+
+// ^ // Update Employee role Id if Role name removed.
+updateEmployeeRoleIdUnderRemovedRole() {
+    return `UPDATE employee SET employee.role_id = null WHERE employee.role_id = ?`;
+};
+
+// ^ // Update Employees if Manager removed.
+updateEmployeesUnderRemovedManager() {
+    return `UPDATE employee SET employee.manager_id = null WHERE employee.manager_id = ?`;
+};
+
+// ^ // Update Employee Role ID
+updateEmployeeRoleId() {
+    return `UPDATE employee SET employee.role_id = ? WHERE employee.id = ?`;
+};
+
+// ^ // Update Employee Manager using the ID.
+updateEmployeeManagerById() {
+    return `UPDATE employee SET employee.manager_id = ? WHERE employee.id = ?`;
+};
+
 
 //DESTORY---------------------------------------------------------------------------------------------------------------------------------------
 
+// - // Remove or fire an employee by their id.
+removeEmployeeById() {
+    return `DELETE FROM employee WHERE employee.id = ?`;
+};
+
+// - // Remove a department using the ID.
+removeDepartmentById() {
+    return `DELETE FROM department WHERE department.id = ?`;
+};
+
+// - // Remove a role using the ID.
+removeRoleById() {
+    return `DELETE FROM role WHERE role.id = ?`;
+};
 
 
 // END CRUD OPERATIONS |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-
-
-
-
-
-
-
-
-
-
-
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 }//END Wrapper XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//
+//  EXPORTs this Module.
 module.exports = Queries;
