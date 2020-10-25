@@ -1,6 +1,9 @@
 //Dependencies
 const connection = require("./connection");//DB Connection Information
 const input = require("../user-interface");//Inquierer
+const express = require("express");
+const util = require("util");
+const inquirer = require("inquirer");
 //END Dependencies
 
 //START EXPORTING so we can use these functions with Inquirer. \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
