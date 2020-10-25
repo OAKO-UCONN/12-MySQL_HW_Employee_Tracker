@@ -83,9 +83,13 @@ function start() {
 //  addEmployeee Function
 var addEmployee = function(){
     inquirer.prompt([{
-        name:"employeename",
+        name:"first_name",
         type:"input",
-        message:"What is the name of the employee?"
+        message:"What is the first name of the employee?"
+    },{
+        name:"last_name",
+        type:"input",
+        message:"What is the last name of the employee?"
     },{
         name:"department",
         type:"input",
@@ -93,11 +97,12 @@ var addEmployee = function(){
     },{
         name:"salary",
         type:"input",
-        message:"What would you like the starting salary to be?"
+        message:"What would you like their salary to be?"
     },{
         name:"role",
         type:"input",
         message:"What would you like their role to be?",
+        /*
         validate: function(value){
             if(isNaN(value)==false){
                 return true;
@@ -105,13 +110,16 @@ var addEmployee = function(){
                 return false;
             }
         }
+        */
     }]).then(function(answer){
-        connection.query("INSERT INTO auctions SET ?", {
-            employeename:answer.employeename,
+        connection.query("INSERT INTO employee SET ?", {
+            first_name:answer.first_name,
+            last_name:answer.first_name,
             department:answer.department,
             salary:answer.salary,
-            role:answer.role
+            role:answer.role,
         },function(err,res){
+            console.log(answer);
             console.log("Your employee was added successfully!");
             start();
         })
