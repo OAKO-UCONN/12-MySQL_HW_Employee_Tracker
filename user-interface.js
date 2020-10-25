@@ -6,7 +6,8 @@ const inquirer = require("inquirer");
 const cTable = require("console.table");
 const { response } = require("express");
 const util = require("util");
-var { Queries } = require('./db/queries');
+//var { Queries } = require('./db/queries');
+var queries = require('./db/queries');
 //import Cat from './cat.js';
 //import Queries from "/db/queries";
 
