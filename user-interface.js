@@ -99,7 +99,7 @@ var addEmployee = function(){
         type:"input",
         message:"What would you like their salary to be?"
     },{
-        name:"role",
+        name:"role", 
         type:"input",
         message:"What would you like their role to be?",
         /*
